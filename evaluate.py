@@ -1,11 +1,3 @@
-"""
-===========================================================
-  ELC 2025-26 | Performance Evaluation Script
-  Evaluates BLIP Image Captioning using BLEU, METEOR
-  Runs on CPU — uses a small sample from MS-COCO
-===========================================================
-"""
-
 from transformers import BlipProcessor, BlipForConditionalGeneration
 from PIL import Image
 import requests, torch, time
@@ -15,7 +7,7 @@ import nltk
 nltk.download('punkt', quiet=True)
 nltk.download('wordnet', quiet=True)
 
-# ── Sample test images (publicly accessible) ─────────────────────────────────
+# ── Sample test images ──
 TEST_SAMPLES = [
     {
         "url": "http://images.cocodataset.org/val2017/000000039769.jpg",

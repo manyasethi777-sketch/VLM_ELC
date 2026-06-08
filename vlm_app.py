@@ -1,16 +1,10 @@
-"""
-ELC 2025-26 | Vision-Language Model
-Image Captioning + Visual Question Answering
-Model: BLIP (Salesforce) | UI: Tkinter
-"""
-
 import tkinter as tk
 from tkinter import filedialog, scrolledtext
 from PIL import Image, ImageTk, ImageOps
 from transformers import BlipProcessor, BlipForConditionalGeneration, BlipForQuestionAnswering
 import torch, threading, time
 
-# ── Global state ──────────────────────────────────────────────────────────────
+# ── Global state ───
 current_image   = None
 models_ready    = False
 cap_processor = cap_model = vqa_processor = vqa_model = None
@@ -43,7 +37,7 @@ def _set_output(msg):
     result_box.insert(tk.END, msg)
     result_box.config(state="disabled")
 
-# ── Actions ───────────────────────────────────────────────────────────────────
+# ── Actions ───
 def upload_image():
     global current_image
     path = filedialog.askopenfilename(
@@ -100,7 +94,7 @@ def do_vqa():
         root.after(0, lambda: btn_vqa.config(state="normal"))
     threading.Thread(target=run, daemon=True).start()
 
-# ── Colours & fonts ───────────────────────────────────────────────────────────
+# ── Colours & fonts ────
 BG       = "#0F1923"
 PANEL    = "#172030"
 ACCENT   = "#00A8CC"
@@ -118,7 +112,7 @@ F_STATUS = ("Helvetica", 9)
 
 PLACEHOLDER = "e.g.  What color is the tennis ball?"
 
-# ── Root window ───────────────────────────────────────────────────────────────
+# ── Root window ──
 root = tk.Tk()
 root.title("VLM Demo — ELC 2025-26")
 root.geometry("820x580")
@@ -127,15 +121,15 @@ root.resizable(False, False)
 
 status_var = tk.StringVar(value="⏳  Loading models in background…")
 
-# ── Header ────────────────────────────────────────────────────────────────────
+# ── Header ─────
 hdr = tk.Frame(root, bg=PANEL, pady=14)
 hdr.pack(fill="x")
 tk.Label(hdr, text="Vision-Language Model", font=F_TITLE,
          fg=ACCENT, bg=PANEL).pack()
-tk.Label(hdr, text="Image Captioning  ·  Visual Question Answering  ·  ELC 2025-26",
+tk.Label(hdr, text="Image Captioning  ·  Visual Question Answering  ",
          font=F_STATUS, fg=MUTED, bg=PANEL).pack()
 
-# ── Main two-column layout ────────────────────────────────────────────────────
+# ── Main two-column layout ───
 body = tk.Frame(root, bg=BG)
 body.pack(fill="both", expand=True, padx=22, pady=14)
 
@@ -144,7 +138,7 @@ left = tk.Frame(body, bg=PANEL, width=310, padx=14, pady=14)
 left.pack(side="left", fill="y")
 left.pack_propagate(False)
 
-tk.Label(left, text="INPUT IMAGE", font=("Helvetica", 9, "bold"),
+tk.Label(left, text="INPUT IMAGE", font=("Helvetica", 12, "bold"),
          fg=MUTED, bg=PANEL).pack(anchor="w")
 
 img_label = tk.Label(left, text="No image loaded\n\nClick Upload Image\nto begin",
@@ -153,7 +147,7 @@ img_label = tk.Label(left, text="No image loaded\n\nClick Upload Image\nto begin
 img_label.pack(pady=(8, 12))
 
 tk.Button(left, text="⬆   Upload Image", command=upload_image,
-          bg=ACCENT, fg="white", font=("Helvetica", 11, "bold"),
+          bg=ACCENT, fg="black", font=("Helvetica", 11, "bold"),
           relief="flat", padx=0, pady=8, cursor="hand2",
           activebackground="#0090AA", activeforeground="white",
           bd=0).pack(fill="x")
@@ -161,18 +155,18 @@ tk.Button(left, text="⬆   Upload Image", command=upload_image,
 tk.Label(left, text="Supported: JPG · PNG · BMP · WEBP",
          font=("Helvetica", 8), fg=MUTED, bg=PANEL).pack(pady=(6, 0))
 
-# RIGHT — controls + output
+
 right = tk.Frame(body, bg=BG, padx=18)
 right.pack(side="right", fill="both", expand=True)
 
 # — Caption section —
-tk.Label(right, text="IMAGE CAPTIONING", font=("Helvetica", 9, "bold"),
+tk.Label(right, text="IMAGE CAPTIONING", font=("Helvetica", 12, "bold"),
          fg=MUTED, bg=BG).pack(anchor="w")
 tk.Frame(right, bg=ACCENT, height=1).pack(fill="x", pady=(2, 8))
 
 btn_caption = tk.Button(right, text="✦   Generate Caption",
                         command=do_caption,
-                        bg=ACCENT2, fg="white",
+                        bg=ACCENT2, fg="black",
                         font=("Helvetica", 11, "bold"),
                         relief="flat", pady=8, cursor="hand2",
                         activebackground="#009E87", activeforeground="white",
@@ -180,7 +174,7 @@ btn_caption = tk.Button(right, text="✦   Generate Caption",
 btn_caption.pack(fill="x")
 
 # — VQA section —
-tk.Label(right, text="VISUAL QUESTION ANSWERING", font=("Helvetica", 9, "bold"),
+tk.Label(right, text="VISUAL QUESTION ANSWERING", font=("Helvetica", 12, "bold"),
          fg=MUTED, bg=BG).pack(anchor="w", pady=(18, 0))
 tk.Frame(right, bg=ACCENT, height=1).pack(fill="x", pady=(2, 8))
 
@@ -208,7 +202,7 @@ q_entry.bind("<Return>",   lambda e: do_vqa())
 
 btn_vqa = tk.Button(right, text="⌕   Get Answer",
                     command=do_vqa,
-                    bg="#065A82", fg="white",
+                    bg="#065A82", fg="black",
                     font=("Helvetica", 11, "bold"),
                     relief="flat", pady=8, cursor="hand2",
                     activebackground="#054D6E", activeforeground="white",
@@ -216,7 +210,7 @@ btn_vqa = tk.Button(right, text="⌕   Get Answer",
 btn_vqa.pack(fill="x", pady=(8, 0))
 
 # — Output section —
-tk.Label(right, text="OUTPUT", font=("Helvetica", 9, "bold"),
+tk.Label(right, text="OUTPUT", font=("Helvetica", 12, "bold"),
          fg=MUTED, bg=BG).pack(anchor="w", pady=(18, 0))
 tk.Frame(right, bg=ACCENT, height=1).pack(fill="x", pady=(2, 6))
 
@@ -228,12 +222,12 @@ result_box = scrolledtext.ScrolledText(right, height=8,
                                         insertbackground=ACCENT)
 result_box.pack(fill="both", expand=True)
 
-# ── Status bar ────────────────────────────────────────────────────────────────
+# ── Status bar ──
 tk.Frame(root, bg="#0A1218", height=1).pack(fill="x")
 tk.Label(root, textvariable=status_var, font=F_STATUS,
          fg=MUTED, bg="#0A1218", anchor="w", padx=12, pady=5).pack(fill="x")
 
-# ── Start model loading ───────────────────────────────────────────────────────
+# ── Start model loading ───
 threading.Thread(target=load_models, daemon=True).start()
 
 root.mainloop()
