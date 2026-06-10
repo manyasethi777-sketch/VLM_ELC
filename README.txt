@@ -1,6 +1,5 @@
 # ============================================================
-#  ELC 2025-26 | Vision-Language Model Project
-#  README — Run Instructions
+#  Vision-Language Model Project
 # ============================================================
 
 ## Project Title
